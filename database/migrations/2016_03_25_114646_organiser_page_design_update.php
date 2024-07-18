@@ -15,7 +15,6 @@ class OrganiserPageDesignUpdate extends Migration
         Schema::table('organisers', function (Blueprint $table) {
             $table->boolean('show_twitter_widget')->default(false);
             $table->boolean('show_facebook_widget')->default(false);
-
             $table->string('page_header_bg_color', 20)->default('#76a867');
             $table->string('page_bg_color', 20)->default('#EEEEEE');
             $table->string('page_text_color', 20)->default('#FFFFFF');

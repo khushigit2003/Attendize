@@ -125,6 +125,8 @@ class Ticket extends MyBaseModel
      */
     public function setEndSaleDateAttribute($date)
     {
+
+        //Carbon is a Laravel library that handles date and time.
         if (!$date) {
             $this->attributes['end_sale_date'] = null;
         } else {
@@ -155,7 +157,6 @@ class Ticket extends MyBaseModel
         if (is_null($this->quantity_available)) {
             return 9999; //Better way to do this?
         }
-
         return $this->quantity_available - ($this->quantity_sold + $this->quantity_reserved);
     }
 
@@ -166,6 +167,7 @@ class Ticket extends MyBaseModel
      */
     public function getQuantityReservedAttribute()
     {
+
         if (is_null($this->quantity_reserved_cache)) {
             $reserved_total = DB::table('reserved_tickets')
                 ->where('ticket_id', $this->id)
@@ -300,6 +302,7 @@ class Ticket extends MyBaseModel
     {
         // Get the event currency
         $eventCurrency = $this->event()->first()->currency()->first();
+        // create a currency object;
 
         // Setup the currency on the event for transformation
         $currency = new \Superbalist\Money\Currency(

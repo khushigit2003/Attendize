@@ -7,6 +7,7 @@ use Auth;
 
 class MyBaseController extends Controller
 {
+    //checks for validation and authetication of current user.
     /**
      * Instantiate a new controller instance.
      *

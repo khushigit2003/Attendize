@@ -5,7 +5,7 @@
         </h1>
     </div>
     <div class="row">
-        <div class="col-md-12" style="text-align: center">
+        <div class="col-md-12" style="text-align: center; background-color:red;">
             @lang("Public_ViewEvent.below_order_details_header")
         </div>
         <div class="col-md-4 col-md-push-8">
@@ -87,6 +87,36 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {!! Form::label("order_phone","Phone") !!}
+                            {!! Form::text("order_phone", null, ['class' => 'form-control']) !!}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {!! Form::label("order_city", "City") !!}
+                            {!! Form::text("order_city", null, ['class' => 'form-control']) !!}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {!! Form::label("order_country", 'Country') !!}
+                            {!! Form::text("order_country", null, ['class' => 'form-control']) !!}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {!! Form::label("order_zip_code", 'Zip_Code') !!}
+                            {!! Form::text("order_zip_code", null, ['class' => 'form-control']) !!}
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row"><div class="col-md-12">&nbsp;</div></div>
                 <div class="row">
                     <div class="col-md-12">

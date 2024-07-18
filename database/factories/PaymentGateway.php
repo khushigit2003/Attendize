@@ -47,3 +47,14 @@ $factory->state(PaymentGateway::class, 'Stripe SCA', [
     'admin_blade_template' => 'ManageAccount.Partials.StripeSCA',
     'checkout_blade_template' => 'Public.ViewEvent.Partials.PaymentStripeSCA'
 ]);
+
+$factory->state(PaymentGateway::class, 'Omniware', [
+    'name' => 'Omniware',
+    'provider_name' => 'Omniware',
+    'provider_url' => 'https://omniware.in/',
+    'is_on_site' => 1,
+    'can_refund' => 1,
+    'default' => 0,
+    'admin_blade_template' => '',
+    'checkout_blade_template' => 'Public.ViewEvent.Partials.PaymentOmniware'
+]);

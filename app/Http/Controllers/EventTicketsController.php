@@ -28,25 +28,21 @@ class EventTicketsController extends MyBaseController
             'sales_volume'  => trans("Controllers.sort.sales_volume"),
             'sort_order'  => trans("Controllers.sort.sort_order"),
         ];
-
         // Getting get parameters.
         $q = $request->get('q', '');
         $sort_by = $request->get('sort_by');
         if (isset($allowed_sorts[$sort_by]) === false) {
             $sort_by = 'sort_order';
         }
-
         // Find event or return 404 error.
         $event = Event::scope()->find($event_id);
         if ($event === null) {
             abort(404);
         }
-
         // Get tickets for event.
         $tickets = empty($q) === false
             ? $event->tickets()->where('title', 'like', '%' . $q . '%')->orderBy($sort_by, 'asc')->paginate()
             : $event->tickets()->orderBy($sort_by, 'asc')->paginate();
-
         // Return view.
         return view('ManageEvent.Tickets', compact('event', 'tickets', 'sort_by', 'q', 'allowed_sorts'));
     }
@@ -108,9 +104,7 @@ class EventTicketsController extends MyBaseController
         $ticket->max_per_person = $request->get('max_per_person');
         $ticket->description = prepare_markdown($request->get('description'));
         $ticket->is_hidden = $request->get('is_hidden') ? 1 : 0;
-
         $ticket->save();
-
         // Attach the access codes to the ticket if it's hidden and the code ids have come from the front
         if ($ticket->is_hidden) {
             $ticketAccessCodes = $request->get('ticket_access_codes', []);

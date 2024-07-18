@@ -39,24 +39,31 @@ class EventAttendeesController extends MyBaseController
      */
     public function showAttendees(Request $request, $event_id)
     {
+        //defining array of columns using which attendees can be sorted
         $allowed_sorts = ['first_name', 'email', 'ticket_id', 'order_reference'];
-
+        //Gets the search query from user
+        //checks if it is asc or desc and if column is mentioned in allowed array
+        //otherwise sorts by create_at column;
         $searchQuery = $request->get('q');
         $sort_order = $request->get('sort_order') == 'asc' ? 'asc' : 'desc';
         $sort_by = (in_array($request->get('sort_by'), $allowed_sorts) ? $request->get('sort_by') : 'created_at');
-
+         //Retrieve EventID
         $event = Event::scope()->find($event_id);
 
         if ($searchQuery) {
+            //Retrieves attendees for that event
             $attendees = $event->attendees()
-                ->withoutCancelled()
+                ->withoutCancelled() //attendees who haven't cancelled
+                    //Join Table orders and attendees on oder_id.
                 ->join('orders', 'orders.id', '=', 'attendees.order_id')
                 ->where(function ($query) use ($searchQuery) {
+                    //Check which field the user wants to sort by
                     $query->where('orders.order_reference', 'like', $searchQuery . '%')
                         ->orWhere('attendees.first_name', 'like', $searchQuery . '%')
                         ->orWhere('attendees.email', 'like', $searchQuery . '%')
                         ->orWhere('attendees.last_name', 'like', $searchQuery . '%');
                 })
+                //Sort it and then paginate it.
                 ->orderBy(($sort_by == 'order_reference' ? 'orders.' : 'attendees.') . $sort_by, $sort_order)
                 ->select('attendees.*', 'orders.order_reference')
                 ->paginate();
@@ -68,7 +75,7 @@ class EventAttendeesController extends MyBaseController
                 ->select('attendees.*', 'orders.order_reference')
                 ->paginate();
         }
-
+         // This data is passed on to the View.
         $data = [
             'attendees'  => $attendees,
             'event'      => $event,
@@ -89,6 +96,8 @@ class EventAttendeesController extends MyBaseController
      */
     public function showInviteAttendee(Request $request, $event_id)
     {
+        //Get EventID , Check if that event has tickets if not display error.
+        //else display view.
         $event = Event::scope()->find($event_id);
 
         /*
@@ -124,6 +133,7 @@ class EventAttendeesController extends MyBaseController
             'ticket_id.exists'   => trans("Controllers.ticket_not_exists_error"),
             'ticket_id.required' => trans("Controllers.ticket_field_required_error"),
         ];
+        //Validates data against the rules and if it fails sends JSON response back to user.
 
         $validator = Validator::make($request->all(), $rules, $messages);
 
@@ -133,7 +143,7 @@ class EventAttendeesController extends MyBaseController
                 'messages' => $validator->messages()->toArray(),
             ]);
         }
-
+        // Save necessary data into variables from the request().
         $ticket_id = $request->get('ticket_id');
         $event = Event::findOrFail($event_id);
         $ticket_price = 0;
@@ -142,12 +152,11 @@ class EventAttendeesController extends MyBaseController
         $attendee_email = $request->get('email');
         $email_attendee = $request->get('email_ticket');
 
-        DB::beginTransaction();
+        DB::beginTransaction(); //executes all operations.
 
         try {
-
             /*
-             * Create the order
+             * Create the new order.
              */
             $order = new Order();
             $order->first_name = $attendee_first_name;
@@ -207,7 +216,6 @@ class EventAttendeesController extends MyBaseController
             $attendee->reference_index = 1;
             $attendee->save();
 
-
             if ($email_attendee == '1') {
                 SendAttendeeInviteJob::dispatch($attendee);
             }
@@ -245,8 +253,8 @@ class EventAttendeesController extends MyBaseController
      */
     public function showImportAttendee(Request $request, $event_id)
     {
+        //imports List of Attendees for a particular Event.
         $event = Event::scope()->find($event_id);
-
         /*
          * If there are no tickets then we can't create an attendee
          * @todo This is a bit hackish
@@ -258,6 +266,9 @@ class EventAttendeesController extends MyBaseController
         return view('ManageEvent.Modals.ImportAttendee', [
             'event'   => $event,
             'tickets' => $event->tickets()->pluck('title', 'id'),
+            //The pluck method creates an array where the keys are the ticket IDs
+            // and the values are the ticket titles. This is useful for populating a
+            // dropdown menu in the view where users can select a ticket.
         ]);
     }
 
@@ -292,6 +303,7 @@ class EventAttendeesController extends MyBaseController
         $event = Event::findOrFail($event_id);
         $ticket = Ticket::scope()->find($request->get('ticket_id'));
         $emailAttendees = $request->get('email_ticket');
+        //imports attendees from the given CSV file.
         if ($request->file('attendees_list')) {
             (new AttendeesImport($event, $ticket, (bool)$emailAttendees))->import(request()->file('attendees_list'));
         }
@@ -305,7 +317,6 @@ class EventAttendeesController extends MyBaseController
             ]),
         ]);
     }
-
     /**
      * Show the printable attendee list
      *
@@ -316,7 +327,6 @@ class EventAttendeesController extends MyBaseController
     {
         $data['event'] = Event::scope()->find($event_id);
         $data['attendees'] = $data['event']->attendees()->withoutCancelled()->orderBy('first_name')->get();
-
         return view('ManageEvent.PrintAttendees', $data);
     }
 
@@ -330,12 +340,10 @@ class EventAttendeesController extends MyBaseController
     public function showMessageAttendee(Request $request, $attendee_id)
     {
         $attendee = Attendee::scope()->findOrFail($attendee_id);
-
         $data = [
             'attendee' => $attendee,
             'event'    => $attendee->event,
         ];
-
         return view('ManageEvent.Modals.MessageAttendee', $data);
     }
 

@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Lang;
 class EventViewController extends Controller
 {
     protected $captchaService;
-
     public function __construct()
     {
         $captchaConfig = config('attendize.captcha');
@@ -27,7 +26,6 @@ class EventViewController extends Controller
             $this->captchaService = Factory::create($captchaConfig);
         }
     }
-
     /**
      * Show the homepage for an event
      *
@@ -40,11 +38,9 @@ class EventViewController extends Controller
     public function showEventHome(Request $request, $event_id, $slug = '', $preview = false)
     {
         $event = Event::findOrFail($event_id);
-
         if (!Utils::userOwns($event) && !$event->is_live) {
             return view('Public.ViewEvent.EventNotLivePage');
         }
-
         $data = [
             'event' => $event,
             'tickets' => $event->tickets()->orderBy('sort_order', 'asc')->get(),
@@ -74,7 +70,7 @@ class EventViewController extends Controller
                 ++$affiliate->visits;
 
                 $affiliate->save();
-
+               //Session management
                 Cookie::queue('affiliate_' . $event_id, $affiliate_ref, 60 * 24 * 60);
             }
         }
@@ -150,9 +146,7 @@ class EventViewController extends Controller
     public function showCalendarIcs(Request $request, $event_id)
     {
         $event = Event::findOrFail($event_id);
-
         $icsContent = $event->getIcsForEvent();
-
         return response()->make($icsContent, 200, [
             'Content-Type' => 'application/octet-stream',
             'Content-Disposition' => 'attachment; filename="event.ics'

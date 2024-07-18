@@ -45,9 +45,16 @@ class AccountPaymentGateway extends MyBaseModel
      *
      * @return mixed
      */
+
+    /* Decodes JSON stored as array when called and then returns the config value as array
+    ACCESSOR*/
     public function getConfigAttribute($value) {
         return json_decode($value, true);
     }
+
+    /*MUTATOR
+    Encodes config value to JSON string
+    */
 
     public function setConfigAttribute($value) {
         $this->attributes['config'] = json_encode($value);

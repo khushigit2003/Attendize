@@ -4,15 +4,12 @@
             @lang("Public_ViewEvent.tickets")
         </h1>
     </div>
-
     @if($event->end_date->isPast())
         <div class="alert alert-boring">
             @lang("Public_ViewEvent.event_already", ['started' => trans('Public_ViewEvent.event_already_ended')])
         </div>
     @else
-
         @if($tickets->count() > 0)
-
             {!! Form::open(['url' => route('postValidateTickets', ['event_id' => $event->id]), 'class' => 'ajax']) !!}
             <div class="row">
                 <div class="col-md-12">

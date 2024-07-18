@@ -72,11 +72,9 @@ class Order
      * @return float|string
      */
     public function getOrderTotalWithBookingFee($currencyFormatted = false) {
-
         if ($currencyFormatted == false ) {
             return number_format($this->orderTotalWithBookingFee, 2, '.', '');
         }
-
         return money($this->orderTotalWithBookingFee, $this->event->currency);
     }
 
@@ -85,11 +83,9 @@ class Order
      * @return float|string
      */
     public function getTaxAmount($currencyFormatted = false) {
-
         if ($currencyFormatted == false ) {
             return number_format($this->taxAmount, 2, '.', '');
         }
-
         return money($this->taxAmount, $this->event->currency);
     }
 
@@ -98,13 +94,10 @@ class Order
      * @return float|string
      */
     public function getGrandTotal($currencyFormatted = false) {
-
         if ($currencyFormatted == false ) {
             return number_format($this->grandTotal, 2, '.', '');
         }
-
         return money($this->grandTotal, $this->event->currency);
-
     }
 
     /**
@@ -113,5 +106,5 @@ class Order
     public function getVatFormattedInBrackets() {
         return "(+" . $this->getTaxAmount(true) . " " . $this->event->organiser->tax_name . ")";
     }
-    
+
 }

@@ -28,7 +28,6 @@ class Dummy
             'token' => $token,
             'receipt_email' => $order_email
         ];
-
         return $this->transaction_data;
     }
 
@@ -46,7 +45,8 @@ class Dummy
         return $this->transaction_data;
     }
 
-    public function extractRequestParameters($request) {}
+    public function extractRequestParameters($request) {
+    }
 
     public function completeTransaction($data) {}
 

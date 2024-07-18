@@ -30,13 +30,10 @@ class EventOrdersController extends MyBaseController
     public function showOrders(Request $request, $event_id = '')
     {
         $allowed_sorts = ['first_name', 'email', 'order_reference', 'order_status_id', 'created_at'];
-
         $searchQuery = $request->get('q');
         $sort_by = (in_array($request->get('sort_by'), $allowed_sorts) ? $request->get('sort_by') : 'created_at');
         $sort_order = $request->get('sort_order') == 'asc' ? 'asc' : 'desc';
-
         $event = Event::scope()->find($event_id);
-
         if ($searchQuery) {
             /*
              * Strip the hash from the start of the search term in case people search for
@@ -45,7 +42,6 @@ class EventOrdersController extends MyBaseController
             if ($searchQuery[0] === '#') {
                 $searchQuery = str_replace('#', '', $searchQuery);
             }
-
             $orders = $event->orders()
                 ->where(function ($query) use ($searchQuery) {
                     $query->where('order_reference', 'like', $searchQuery . '%')
@@ -58,7 +54,6 @@ class EventOrdersController extends MyBaseController
         } else {
             $orders = $event->orders()->orderBy($sort_by, $sort_order)->paginate();
         }
-
         $data = [
             'orders'     => $orders,
             'event'      => $event,
@@ -66,7 +61,6 @@ class EventOrdersController extends MyBaseController
             'sort_order' => $sort_order,
             'q'          => $searchQuery ? $searchQuery : '',
         ];
-
         return view('ManageEvent.Orders', $data);
     }
 
@@ -102,14 +96,12 @@ class EventOrdersController extends MyBaseController
     public function showEditOrder(Request $request, $order_id)
     {
         $order = Order::scope()->find($order_id);
-
         $data = [
             'order'     => $order,
             'event'     => $order->event(),
             'attendees' => $order->attendees()->withoutCancelled()->get(),
             'modal_id'  => $request->get('modal_id'),
         ];
-
         return view('ManageEvent.Modals.EditOrder', $data);
     }
 

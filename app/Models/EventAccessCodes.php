@@ -18,6 +18,7 @@ class EventAccessCodes extends MyBaseModel
      */
     public static function logUsage($event_id, $accessCode)
     {
+        // Tracks how many times an access code has been used.
         (new static)::where('event_id', $event_id)
             ->where('code', $accessCode)
             ->increment('usage_count');
@@ -30,6 +31,7 @@ class EventAccessCodes extends MyBaseModel
      */
     public static function findFromCode($code, $event_id)
     {
+        //validation of access codes by retrieving them.
         return (new static())
             ->where('code', $code)
             ->where('event_id', $event_id)

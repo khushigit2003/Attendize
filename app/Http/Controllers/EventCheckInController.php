@@ -20,18 +20,15 @@ class EventCheckInController extends MyBaseController
     public function showCheckIn($event_id)
     {
         $event = Event::scope()->findOrFail($event_id);
-
         $data = [
             'event'     => $event,
             'attendees' => $event->attendees
         ];
-
         JavaScript::put([
             'qrcodeCheckInRoute' => route('postQRCodeCheckInAttendee', ['event_id' => $event->id]),
             'checkInRoute'       => route('postCheckInAttendee', ['event_id' => $event->id]),
             'checkInSearchRoute' => route('postCheckInSearch', ['event_id' => $event->id]),
         ]);
-
         return view('ManageEvent.CheckIn', $data);
     }
 
@@ -49,8 +46,9 @@ class EventCheckInController extends MyBaseController
      */
     public function postCheckInSearch(Request $request, $event_id)
     {
+        //retrieve search query
         $searchQuery = $request->get('q');
-
+        //filter attendees via events
         $attendees = Attendee::scope()->withoutCancelled()
             ->join('tickets', 'tickets.id', '=', 'attendees.ticket_id')
             ->join('orders', 'orders.id', '=', 'attendees.order_id')
@@ -94,14 +92,11 @@ class EventCheckInController extends MyBaseController
      */
     public function postCheckInAttendee(Request $request)
     {
+        //basically checks if attendee has checked in for that event or not
         $attendee_id = $request->get('attendee_id');
         $checking = $request->get('checking');
 
         $attendee = Attendee::scope()->find($attendee_id);
-
-        /*
-         * Ugh
-         */
         if ((($checking == 'in') && ($attendee->has_arrived == 1)) || (($checking == 'out') && ($attendee->has_arrived == 0))) {
             return response()->json([
                 'status'  => 'error',
@@ -159,22 +154,18 @@ class EventCheckInController extends MyBaseController
                 'message' => trans("Controllers.invalid_ticket_error")
             ]);
         }
-
         $relatedAttendesCount = Attendee::where('id', '!=', $attendee->id)
             ->where([
                 'order_id'    => $attendee->order_id,
                 'has_arrived' => false
             ])->count();
-
         if ($attendee->has_arrived) {
             return response()->json([
                 'status'  => 'error',
                 'message' => trans("Controllers.attendee_already_checked_in", ["time"=> $attendee->arrival_time->format(config("attendize.default_datetime_format"))])
             ]);
         }
-
         Attendee::find($attendee->id)->update(['has_arrived' => true, 'arrival_time' => Carbon::now()]);
-
         return response()->json([
             'status'  => 'success',
             'name' => $attendee->first_name." ".$attendee->last_name,

@@ -14,6 +14,7 @@ use Illuminate\View\View;
  */
 
 class EventAccessCodesController extends MyBaseController
+//BaseController is used for routing
 {
 
     /**
@@ -21,7 +22,7 @@ class EventAccessCodesController extends MyBaseController
      * @return mixed
      */
     public function show($event_id)
-    {
+    {//Retrieves event_id and return view by passing event as data to that view.
         $event = Event::scope()->findOrFail($event_id);
         return view('ManageEvent.AccessCodes', [
             'event' => $event,
@@ -34,6 +35,7 @@ class EventAccessCodesController extends MyBaseController
      */
     public function showCreate($event_id)
     {
+        //returns view for creating a new access code.
         return view('ManageEvent.Modals.CreateAccessCode', [
             'event' => Event::scope()->find($event_id),
         ]);
@@ -48,7 +50,11 @@ class EventAccessCodesController extends MyBaseController
      */
     public function postCreate(Request $request, $event_id)
     {
+        //Logic for creating new access code.
+        //$request contains the user input for access code.
         $eventAccessCode = new EventAccessCodes();
+
+        //Validates the access code using the rules
 
         if (!$eventAccessCode->validate($request->all())) {
             return response()->json([
@@ -56,7 +62,6 @@ class EventAccessCodesController extends MyBaseController
                 'messages' => $eventAccessCode->errors(),
             ]);
         }
-
         // Checks for no duplicates
         $newAccessCode = strtoupper($request->get('code'));
         if (EventAccessCodes::findFromCode($newAccessCode, $event_id)->count() > 0) {
@@ -72,6 +77,8 @@ class EventAccessCodesController extends MyBaseController
         $eventAccessCode->event_id = $event_id;
         $eventAccessCode->code = $newAccessCode;
         $eventAccessCode->save();
+
+        //Returns JSON response back to user.
 
         session()->flash('message', trans('AccessCodes.success_message'));
 
@@ -92,11 +99,14 @@ class EventAccessCodesController extends MyBaseController
     public function postDelete($event_id, $access_code_id)
     {
         /** @var Event $event */
+        //Retrieves EventID
         $event = Event::scope()->findOrFail($event_id);
 
+        //Finds the access code based on eventID.
         if ($event->hasAccessCode($access_code_id)) {
             /** @var EventAccessCodes $accessCode */
             $accessCode = EventAccessCodes::find($access_code_id);
+            //Check if accessCode is being used toherwise delete .
             if ($accessCode->usage_count > 0) {
                 return response()->json([
                     'status' => 'error',

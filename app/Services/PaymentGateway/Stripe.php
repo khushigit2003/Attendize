@@ -6,11 +6,8 @@ class Stripe
 {
 
     CONST GATEWAY_NAME = 'Stripe';
-
     private $transaction_data;
-
     private $gateway;
-
     private $extra_params = ['stripeToken'];
 
     public function __construct($gateway)
@@ -28,7 +25,6 @@ class Stripe
             'token' => $this->options['stripeToken'],
             'receipt_email' => $order_email
         ];
-
         return $this->transaction_data;
     }
 

@@ -18,7 +18,7 @@ class Factory
     /**
      * @param $name
      * @param $paymentGatewayConfig
-     * @return Dummy|Stripe|StripeSCA
+     * @return Dummy|Stripe|StripeSCA|Omniware
      * @throws \Exception
      */
     public function create($name, $paymentGatewayConfig)
@@ -53,6 +53,11 @@ class Factory
                     return new StripeSCA($gateway, $paymentGatewayConfig);
 
                 }
+
+            case Omniware::GATEWAY_NAME :
+            {
+                return new Omniware($paymentGatewayConfig);
+            }
 
             default :
                 {

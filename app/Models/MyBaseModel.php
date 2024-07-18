@@ -58,6 +58,7 @@ class MyBaseModel extends \Illuminate\Database\Eloquent\Model
     {
         $className = static::class;
         $entity = new $className();
+        // basically checks whether a user is logged in or not and accordingly sets parameters.
 
         if (Auth::check()) {
             if (!$ignore_user_id) {
@@ -87,6 +88,7 @@ class MyBaseModel extends \Illuminate\Database\Eloquent\Model
      */
     public function validate($data)
     {
+        // if you are unable to validate it goes into errors.
         $rules = (method_exists($this, 'rules') ? $this->rules() : $this->rules);
         $v = Validator::make($data, $rules, $this->messages, $this->attributes);
 
@@ -145,6 +147,8 @@ class MyBaseModel extends \Illuminate\Database\Eloquent\Model
          * browse all events etc. in the system.
          * //return  $query;
          */
+
+        //if user is authenticated , account_id is set.
 
         if (!$accountId && Auth::check()) {
             $accountId = Auth::user()->account_id;

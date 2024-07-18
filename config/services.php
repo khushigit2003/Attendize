@@ -29,5 +29,10 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-
+    'omniware' => [
+        'api_key' => env('OMNIWARE_API_KEY'),
+        'encryption_key' => env('OMNIWARE_ENCRYPTION_KEY'),
+        'decryption_key' => env('OMNIWARE_DECRYPTION_KEY'),
+        'salt' => env('OMNIWARE_SALT'),
+    ],
 ];

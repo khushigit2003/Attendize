@@ -55,6 +55,10 @@ class EventStats extends \Illuminate\Database\Eloquent\Model
 
         $cookie_name = 'visitTrack_'.$event_id.'_'.date('dmy');
 
+        // Checks if cookie already exisists and
+        // if  it doesn't exist it creates a new cookie w value and lifetime of 14 days
+        //and records a unique view.
+
         if (!Cookie::get($cookie_name)) {
             Cookie::queue($cookie_name, true, 60 * 24 * 14);
             ++$stats->unique_views;

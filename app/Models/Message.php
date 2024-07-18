@@ -41,6 +41,7 @@ class Message extends MyBaseModel
      */
     public function getRecipientsLabelAttribute()
     {
+        // if recipients is less than 0 return tiket title.
         if ($this->recipients == 0) {
             return 'All Attendees';
         }

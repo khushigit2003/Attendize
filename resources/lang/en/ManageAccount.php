@@ -1,6 +1,6 @@
 <?php
 /*************************************************************************
- Generated via "php artisan localization:missing" at 2018/04/13 13:27:24 
+ Generated via "php artisan localization:missing" at 2018/04/13 13:27:24
 *************************************************************************/
 
 return array (
@@ -30,6 +30,11 @@ return array (
   'merchant_id' => 'Merchant ID',
   'open_source_soft' => 'Open-source software',
   'open_source_soft_description' => 'Attendize is built using many fantastic open-source libraries. You can see an overview of these on <b><a href="https://libraries.io/github/Attendize/Attendize?ref=Attendize_About_Page" target="_blank">libraries.io</a></b>.',
+    'omniware_api_key' => 'Omniware API Key',
+    'encryption_key' => 'Encryption Key',
+    'decryption_key' => 'Decryption Key',
+    'my_salt' => 'My Salt',
+  'omniware_settings' =>'Omniware Setting',
   'payment' => 'Payment',
   'paypal_password' => 'PayPal password',
   'paypal_settings' => 'PayPal Settings',

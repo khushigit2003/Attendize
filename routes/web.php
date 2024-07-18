@@ -195,6 +195,21 @@ Route::group(
         Route::post('{event_id}/checkout/create',
             [EventCheckoutController::class, 'postCreateOrder']
         )->name('postCreateOrder');
+
+
+        Route::post('/omniware/intermediate/{event_id}',
+            [EventCheckoutController::class, 'omniwareIntermediate']
+        )->name('omniwareIntermediate');
+
+
+            Route::post('/omniware/callback/{order_id}',
+                [EventCheckoutController::class, 'handleOmniwareCallback'])
+                ->name('omniwarecallback');
+
+            Route::get('order/details/{order_id}',
+                [EventCheckoutController::class, 'show'])
+                ->name('orderdetails');
+
     });
 
     /*
@@ -212,12 +227,10 @@ Route::group(
      * Backend routes
      */
     Route::group(['middleware' => ['auth', 'first.run']], function () {
-
         /*
          * Edit User
          */
         Route::group(['prefix' => 'user'], function () {
-
             Route::get('/',
                 [UserController::class, 'showEditUser']
             )->name('showEditUser');
@@ -225,14 +238,12 @@ Route::group(
             Route::post('/',
                 [UserController::class, 'postEditUser']
             )->name('postEditUser');
-
         });
 
         /*
          * Manage account
          */
         Route::group(['prefix' => 'account'], function () {
-
             Route::get('/',
                 [ManageAccountController::class, 'showEditAccount']
             )->name('showEditAccount');

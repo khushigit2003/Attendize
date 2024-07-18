@@ -83,7 +83,6 @@ class EventController extends MyBaseController
         }
 
         $event->end_date = $request->get('end_date');
-
         $event->currency_id = Auth::user()->account->currency_id;
         //$event->timezone_id = Auth::user()->account->timezone_id;
         /*

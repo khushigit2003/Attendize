@@ -1,25 +1,20 @@
 <?php
 
 namespace App\Mail;
-
 use App\Models\Order;
 use App\Services\Order as OrderService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-
-
 class SendOrderConfirmationMail extends Mailable
 {
     use Queueable, SerializesModels;
-
     /**
      * The order instance.
      *
      * @var Order
      */
     public $order;
-
     /**
      * The order service instance.
      *

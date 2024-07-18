@@ -78,6 +78,8 @@ class Organiser extends MyBaseModel implements AuthenticatableContract
      */
     public function attendees()
     {
+        //Organizer can access attendees through events.
+        //Organizer has many events and events hav many attendees.
         return $this->hasManyThrough(\App\Models\Attendee::class, \App\Models\Event::class);
     }
 
@@ -88,6 +90,7 @@ class Organiser extends MyBaseModel implements AuthenticatableContract
      */
     public function orders()
     {
+        //Organizer has many orders through events
         return $this->hasManyThrough(\App\Models\Order::class, \App\Models\Event::class);
     }
 
@@ -130,6 +133,7 @@ class Organiser extends MyBaseModel implements AuthenticatableContract
 
     public function getTicketsSold()
     {
+        // Why aren't we directly using quantity_sold column from table TICKETS?????
         return $this->attendees()->where('is_cancelled', false)->count();
     }
 
